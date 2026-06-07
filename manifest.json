@@ -1,0 +1,18 @@
+{
+  "name": "TennisAtom",
+  "short_name": "TennisAtom",
+  "description": "AI 剪辑 · 你的高光",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#FF5B00",
+  "background_color": "#F9F9F9",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23FF5B00'/%3E%3Ctext x='50' y='65' text-anchor='middle' font-size='48'%3E🎾%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

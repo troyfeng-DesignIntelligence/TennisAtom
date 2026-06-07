@@ -2,9 +2,13 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#FF5B00">
+<meta name="apple-mobile-web-app-title" content="TennisAtom">
+<link rel="manifest" href="manifest.json">
 <title>TennisAtom</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <style>
@@ -19,8 +23,8 @@
   --fg:#00000E; --fg-muted:rgba(0,0,14,.55);
   --primary:#FF5B00; --on-primary:#00000E; --primary-soft:#FFD9C6;
   --accent:#5AD2D5; --special:#B8F500; --border:#EAEAEA; --ring:#FF5B00;
-  --font-display:'Barlow Condensed','PingFang SC','Microsoft YaHei',sans-serif;
-  --font-body:'Barlow','PingFang SC','Microsoft YaHei',sans-serif;
+  --font-display:'Barlow Condensed','PingFang SC','Noto Sans SC','HarmonyOS Sans','Microsoft YaHei',sans-serif;
+  --font-body:'Barlow','PingFang SC','Noto Sans SC','HarmonyOS Sans','Microsoft YaHei',sans-serif;
   --r:22px; --r-sm:14px; --r-pill:999px;
   --sh-xs:0 1px 3px rgba(0,0,14,.06);
   --sh-sm:0 3px 10px rgba(0,0,14,.08);
@@ -32,10 +36,10 @@
 }
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;height:100%;overflow:hidden;font-family:var(--font-body);background:#000;color:var(--fg);line-height:1.45;}
+html,body{width:100%;height:100%;overflow:hidden;font-family:var(--font-body);background:#000;color:var(--fg);line-height:1.45;overscroll-behavior:none;}
 
 /* ===== App Frame ===== */
-#app{width:100%;height:100dvh;max-width:600px;margin:0 auto;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden;}
+#app{width:100%;height:100vh;height:100dvh;max-width:600px;margin:0 auto;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden;}
 
 /* status bar */
 .app-status{display:flex;justify-content:space-between;align-items:center;padding:12px 24px 6px;font-size:13px;font-weight:600;color:var(--fg);background:var(--bg);z-index:10;flex:0 0 auto;}
@@ -44,7 +48,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:var(--font-body);ba
 
 /* screen container */
 #screens{flex:1;position:relative;overflow:hidden;background:var(--bg);}
-.screen{position:absolute;inset:0;overflow-y:auto;padding:24px 24px 28px;display:none;flex-direction:column;background:var(--bg);-webkit-overflow-scrolling:touch;}
+.screen{position:absolute;inset:0;overflow-y:auto;overscroll-behavior:contain;padding:24px 24px 28px;display:none;flex-direction:column;background:var(--bg);}
 .screen.active{display:flex;}
 .screen::-webkit-scrollbar{width:0;}
 
@@ -55,7 +59,7 @@ h3{font-family:var(--font-display);font-size:19px;font-weight:600;margin:16px 0 
 .backbar{display:flex;align-items:center;gap:6px;font-size:15px;color:var(--fg-muted);margin-bottom:12px;cursor:pointer;font-weight:500;}
 
 /* buttons */
-.btn{position:relative;overflow:hidden;font-family:var(--font-display);border:none;border-radius:var(--r-pill);padding:20px;text-align:center;font-size:20px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:transform var(--dur-fast) var(--ease-spring),box-shadow var(--dur-mid);}
+.btn{position:relative;overflow:hidden;font-family:var(--font-display);border:none;border-radius:var(--r-pill);padding:20px;text-align:center;font-size:20px;font-weight:700;letter-spacing:.5px;cursor:pointer;touch-action:manipulation;transition:transform var(--dur-fast) var(--ease-spring),box-shadow var(--dur-mid);}
 .btn:active{transform:translateY(2px) scale(.985);}
 .btn.primary{background:linear-gradient(135deg,#FF6E1C,#FF5B00 60%,#F25200);color:#00000E;box-shadow:0 10px 26px rgba(255,91,0,.36),inset 0 1px 1px rgba(255,255,255,.3);}
 .btn.primary::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.4),transparent);transform:skewX(-20deg);animation:sheen 3.4s ease-in-out infinite;}
@@ -237,7 +241,7 @@ h3{font-family:var(--font-display);font-size:19px;font-weight:600;margin:16px 0 
 @keyframes bhBreathe{from{transform:scale(1) translateY(0);}to{transform:scale(1.08) translateY(-12px);}}
 @keyframes bhFloat{from{transform:translateY(0);}to{transform:translateY(-18px);}}
 
-.bh-top{display:flex;align-items:center;justify-content:space-between;padding:max(20px,env(safe-area-inset-top,20px)) 28px 0;position:relative;z-index:3;}
+.bh-top{display:flex;align-items:center;justify-content:space-between;padding:24px 28px 0;position:relative;z-index:3;}
 .bh-logo{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:700;font-size:24px;color:#00000E;letter-spacing:.5px;}
 .bh-logo .ball{width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#D6FF5C,#B8F500);display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 4px 14px rgba(0,0,14,.22),inset 0 1px 2px rgba(255,255,255,.5);}
 .bh-pill{font-size:13px;font-weight:700;color:#00000E;background:rgba(255,255,255,.28);backdrop-filter:blur(6px);border:1px solid rgba(0,0,14,.18);border-radius:var(--r-pill);padding:7px 16px;font-family:var(--font-display);letter-spacing:.3px;}
@@ -249,7 +253,7 @@ h3{font-family:var(--font-display);font-size:19px;font-weight:600;margin:16px 0 
 .bh-title .em{display:inline-block;background:#00000E;color:var(--brand-orange);padding:0 16px;border-radius:11px;transform:rotate(-2.5deg);box-shadow:0 8px 22px rgba(0,0,14,.28);}
 .bh-desc{font-size:17px;color:#00000E;opacity:.8;margin-top:26px;max-width:420px;line-height:1.6;font-weight:500;}
 
-.bh-bot{padding:0 28px max(32px,env(safe-area-inset-bottom,32px));position:relative;z-index:3;}
+.bh-bot{padding:0 28px 32px;position:relative;z-index:3;}
 .bh-cta{position:relative;overflow:hidden;background:#00000E;color:#fff;border:none;border-radius:var(--r-pill);padding:22px;width:100%;font-family:var(--font-display);font-weight:700;font-size:21px;letter-spacing:.5px;cursor:pointer;box-shadow:0 14px 34px rgba(0,0,14,.32);transition:transform var(--dur-fast) var(--ease-spring);}
 .bh-cta:active{transform:translateY(2px) scale(.985);}
 .bh-cta::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:sheen 3.2s ease-in-out infinite;}
