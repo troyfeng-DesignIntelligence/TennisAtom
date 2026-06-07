@@ -316,19 +316,19 @@ h3{font-family:var(--font-display);font-size:19px;font-weight:600;margin:16px 0 
       <div class="backbar" onclick="go('P0')">‹ 返回</div>
       <h2>想要什么感觉？</h2>
       <div class="note" style="margin-bottom:16px;">选 1 个，剩下交给剧组</div>
-      <div class="styleCard sel" onclick="pickStyle(this)">
+      <div class="styleCard sel" onclick="pickStyle(this)" data-video="videos/No1.mp4" data-name="运动气质">
         <div class="sw" style="background:linear-gradient(135deg,#FF5B00,#FFD9C6);"></div>
         <div><b>运动气质</b><span>奔跑·坚持·向上感，show 你的气场</span></div><div class="tick">✓</div>
       </div>
-      <div class="styleCard" onclick="pickStyle(this)">
+      <div class="styleCard" onclick="pickStyle(this)" data-video="videos/No2.mp4" data-name="热血燃向">
         <div class="sw" style="background:linear-gradient(135deg,#00000E,#FF5B00);"></div>
         <div><b>热血燃向</b><span>速度线＋能量光环</span></div><div class="tick">✓</div>
       </div>
-      <div class="styleCard" onclick="pickStyle(this)">
+      <div class="styleCard" onclick="pickStyle(this)" data-video="videos/No3.mp4" data-name="电影质感">
         <div class="sw" style="background:linear-gradient(135deg,#1a1a22,#5AD2D5);"></div>
         <div><b>电影质感</b><span>慢镜＋戏剧光效</span></div><div class="tick">✓</div>
       </div>
-      <div class="styleCard" onclick="pickStyle(this)">
+      <div class="styleCard" onclick="pickStyle(this)" data-video="videos/No5.mp4" data-name="轻松搞笑">
         <div class="sw" style="background:linear-gradient(135deg,#FFD9C6,#B8F500);"></div>
         <div><b>轻松搞笑</b><span>调侃文案＋轻特效</span></div><div class="tick">✓</div>
       </div>
@@ -412,7 +412,7 @@ h3{font-family:var(--font-display);font-size:19px;font-weight:600;margin:16px 0 
 
       <div class="tabview on" id="viewA">
         <div class="imgph result-vid" style="height:280px;"><video id="mainVid" src="videos/No1.mp4" controls playsinline preload="metadata"></video></div>
-        <div class="note" style="text-align:center;margin:12px 0;">「运动气质」· 分镜＋字幕＋配乐已就绪</div>
+        <div class="note" style="text-align:center;margin:12px 0;" id="p4Label">「运动气质」· 分镜＋字幕＋配乐已就绪</div>
         <h3>做好了，怎么留住它？</h3>
         <div class="exit">
           <div class="e main" onclick="toast('已存到我的作品')"><span class="ic">💾</span>存档<br>自己看</div>
@@ -514,13 +514,22 @@ function handleUpNext(){
 function go(id){
   var mv=document.getElementById('mainVid'); if(mv&&id!=='P4') mv.pause();
   if(id==='P0'){document.querySelectorAll('#P0 .imgph video').forEach(function(v){v.play().catch(function(){});});}
-  // play picker thumbnails when entering P2
   if(id==='P2'){document.querySelectorAll('.vidGrid video').forEach(function(v){v.play().catch(function(){});});document.querySelectorAll('.uploadedRow video').forEach(function(v){v.play().catch(function(){});});}
+  if(id==='P4'){
+    var mv=document.getElementById('mainVid'); if(mv){mv.src=curStyle.video;mv.load();}
+    var lb=document.getElementById('p4Label'); if(lb) lb.textContent='「'+curStyle.name+'」· 分镜＋字幕＋配乐已就绪';
+  }
   document.querySelectorAll('.screen').forEach(function(s){return s.classList.remove('active');});
   document.getElementById(id).classList.add('active');
   if(id==='P3') runCrew();
 }
-function pickStyle(el){document.querySelectorAll('.styleCard').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+let curStyle={video:'videos/No1.mp4',name:'运动气质'};
+function pickStyle(el){
+  document.querySelectorAll('.styleCard').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  curStyle.video=el.dataset.video;
+  curStyle.name=el.dataset.name;
+}
 function pickMode(el){document.querySelectorAll('.modeCard').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
 function toast(m){let d=document.createElement('div');d.className='toast';d.textContent=m+'（演示）';document.body.appendChild(d);setTimeout(()=>d.remove(),1600);}
 
@@ -534,7 +543,7 @@ function runCrew(){
   timers.forEach(clearTimeout);timers=[];chat().innerHTML='';bar(0);
   ['a-bone','a-scout','a-talent','a-writer','a-fx','a-dir'].forEach(a=>setAgent(a,null));
   document.getElementById('dirHint').style.display='block';
-  pushMsg({sys:true,html:'制作群已建立 · 风格「运动气质」'});
+  pushMsg({sys:true,html:'制作群已建立 · 风格「'+curStyle.name+'」'});
   later(()=>{setAgent('a-bone','work');bar(12);pushMsg({who:'骨骼师',av:'🦴',html:'锁定身姿，<span class="data">33 个关节点</span>全程跟住～'});},500);
   later(()=>{setAgent('a-bone','done');setAgent('a-scout','work');bar(30);pushMsg({who:'球探',av:'📡',html:'这记正手 <span class="data">118 km/h</span>！上旋 <span class="data">2400 rpm</span><br><span class="fixbtn" onclick="fixData(this)">👎 数据不对？改一下</span>'});},1900);
   later(()=>{setAgent('a-scout','done');setAgent('a-talent','work');bar(46);pushMsg({who:'星探',av:'🎯',html:'<span class="note">我也可能看走眼，你帮我把把关 👀</span><br>挑出 <span class="data">3 记制胜分</span><span class="data">1 个 ACE</span>，排了 5 个高光'});later(()=>askHL(),900);},3600);
@@ -551,7 +560,7 @@ function askHL(){
 }
 function afterHL(){setAgent('a-talent','done');setAgent('a-writer','work');bar(62);pushMsg({sys:true,html:'高光已确认 · 编剧 / 特效师 / 剪辑 并行赶工'});later(()=>{pushMsg({who:'编剧',av:'✍️',html:'分镜排好，社媒文案配上 <span class="data">#网球 #坚持打球</span>'});later(()=>askTone(),800);},700);}
 function askTone(){pushMsg({who:'编剧 @你',av:'✍️',ask:true,html:`语气你定（默认 气质向）<div style="margin-top:9px;"><span class="chip">气质 ✓</span> <span class="chip line">热血</span> <span class="chip line">调侃</span><div class="row" style="margin-top:12px;"><button class="btn ghost sm" onclick="afterTone()">跳过</button><button class="btn primary sm" onclick="afterTone()">就这样 →</button></div></div>`});}
-function afterTone(){setAgent('a-writer','done');setAgent('a-fx','work');bar(78);pushMsg({who:'特效师',av:'✨',html:'套上「运动气质」：奔跑残影、击球定格、电影色'});later(()=>{setAgent('a-fx','done');setAgent('a-dir','work');bar(92);pushMsg({who:'剪辑',av:'🎬',html:'三条线收齐，配乐对点，导出中…'});},1200);later(()=>{setAgent('a-dir','done');bar(100);pushMsg({sys:true,html:'🎉 完成！成片 + 报告已就绪'});later(()=>go('P4'),900);},2500);}
+function afterTone(){setAgent('a-writer','done');setAgent('a-fx','work');bar(78);pushMsg({who:'特效师',av:'✨',html:'套上「'+curStyle.name+'」：奔跑残影、击球定格、电影色'});later(()=>{setAgent('a-fx','done');setAgent('a-dir','work');bar(92);pushMsg({who:'剪辑',av:'🎬',html:'三条线收齐，配乐对点，导出中…'});},1200);later(()=>{setAgent('a-dir','done');bar(100);pushMsg({sys:true,html:'🎉 完成！成片 + 报告已就绪'});later(()=>go('P4'),900);},2500);}
 function tog(el){el.classList.toggle('on');let c=el.querySelector('.chk');c.textContent=el.classList.contains('on')?'✓':'';}
 
 /* results */
